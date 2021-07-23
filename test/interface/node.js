@@ -33,3 +33,45 @@ assert(body.COMMENT_NODE, body.constructor.COMMENT_NODE);
 assert(body.DOCUMENT_NODE, body.constructor.DOCUMENT_NODE);
 assert(body.DOCUMENT_TYPE_NODE, body.constructor.DOCUMENT_TYPE_NODE);
 assert(body.DOCUMENT_FRAGMENT_NODE, body.constructor.DOCUMENT_FRAGMENT_NODE);
+
+
+const runShadowTests = () => {
+    const { document } = parseHTML(`
+    <html><head /><body>  
+  <div class="js-parent">
+  <div class="js-child"></div>
+  </div>
+  <div class="js-shadowHost"></div>
+  </body></html>`);
+  
+    const parent = document.querySelector('.js-parent');
+    const child = document.querySelector('.js-child');
+    const shadowHost = document.querySelector('.js-shadowHost');
+  
+    console.log('should be document: ', parent.getRootNode().nodeName); // #document
+    console.log('should be document: ', child.getRootNode().nodeName); // #document
+  
+  
+    // create a ShadowRoot
+    const shadowRoot = shadowHost.attachShadow({mode:'open'});
+    shadowRoot.innerHTML = '<style>div{background:#2bb8aa;}</style>'
+        + '<div class="js-shadowChild">content</div>';
+    const shadowChild = shadowRoot.querySelector('.js-shadowChild');
+  
+    // The default value of composed is false
+    console.log(shadowChild.getRootNode() === shadowRoot); // true
+    console.log('should be shadow root: ', shadowChild.getRootNode({composed:false}) === shadowRoot); // true
+    console.log('shadowChild.getRootNode({composed:false}).nodeName = ', shadowChild.getRootNode({composed:false}).nodeName);
+    console.log('should be document: ', shadowChild.getRootNode({composed:true}).nodeName); // #document
+  };
+  
+  
+  
+  runShadowTests();
+  
+  
+  // const {documentElement} = document;
+  // documentElement.attachShadow({mode: 'open'})
+  
+  // console.log('p.getRootNode = ', p.getRootNode().nodeName);
+  // console.log('p.getRootNode = ', p.getRootNode({composed: true}).nodeName);

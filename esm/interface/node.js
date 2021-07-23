@@ -31,6 +31,24 @@ const getParentNodeCount = ({parentNode}) => {
   return count;
 };
 
+const isShadowRoot = node => 
+      (node.nodeName === '#document-fragment' || node.nodeName === '#shadow-root') &&
+      node.constructor.name === 'ShadowRoot'
+    ;
+
+const getRootNode = node => {
+  while (node.parentNode) {
+    node = node.parentNode;
+  }
+  return node;
+}
+
+// https://dom.spec.whatwg.org/#concept-shadow-including-root
+function shadowIncludingRoot(node) {
+  const root = getRootNode(node);
+  return isShadowRoot(root) ? shadowIncludingRoot(root.host) : root;
+}
+
 /**
  * @implements globalThis.Node
  */
@@ -148,10 +166,7 @@ export class Node extends EventTarget {
     return this.parentNode;
   }
 
-  getRootNode() {
-    let root = this;
-    while (root.parentNode)
-      root = root.parentNode;
-    return root.nodeType === DOCUMENT_NODE ? root.documentElement : root;
+  getRootNode({composed = false} = {}) {
+    return composed ? shadowIncludingRoot(this) : getRootNode(this);
   }
 }

@@ -46,7 +46,9 @@ export class Node extends EventTarget implements globalThis.Node {
     isSameNode(node: any): boolean;
     compareDocumentPosition(target: any): number;
     isEqualNode(node: any): boolean;
-    getRootNode(): any;
+    getRootNode({ composed }?: {
+        composed?: boolean;
+    }): any;
     [NEXT]: any;
     [PREV]: any;
 }

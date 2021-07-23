@@ -220,7 +220,9 @@ export class Document extends NonElementParentNode implements globalThis.Documen
             compareDocumentPosition(target: any): number;
             isEqualNode(node: any): boolean;
             _getParent(): any;
-            getRootNode(): any;
+            getRootNode({ composed }?: {
+                composed?: boolean;
+            }): any;
             [PREV]: any;
             dispatchEvent(event: any): any;
         };
