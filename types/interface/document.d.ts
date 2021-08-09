@@ -222,7 +222,9 @@ export class Document extends NonElementParentNode implements globalThis.Documen
             getRootNode({ composed }?: {
                 composed?: boolean;
             }): any;
-            [PREV]: any;
+            [PREV]: any; /**
+             * @implements globalThis.Document
+             */
             dispatchEvent(event: any): any;
         };
         readonly observedAttributes: any[];

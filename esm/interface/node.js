@@ -32,14 +32,12 @@ const getParentNodeCount = ({parentNode}) => {
 };
 
 const isShadowRoot = node => 
-      (node.nodeName === '#document-fragment' || node.nodeName === '#shadow-root') &&
-      node.constructor.name === 'ShadowRoot'
-    ;
+      node.nodeName === '#shadow-root' &&
+      node.constructor.name === 'ShadowRoot';
 
 const getRootNode = node => {
-  while (node.parentNode) {
+  while (node.parentNode)
     node = node.parentNode;
-  }
   return node;
 }
 
