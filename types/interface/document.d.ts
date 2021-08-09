@@ -149,7 +149,6 @@ export class Document extends NonElementParentNode implements globalThis.Documen
             tabIndex: number;
             readonly innerText: string;
             textContent: string;
-            innerHTML: string;
             outerHTML: string;
             readonly attributes: any;
             focus(): void;

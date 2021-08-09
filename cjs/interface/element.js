@@ -15,7 +15,7 @@ const {
 } = require('../shared/attributes.js');
 
 const {
-  CLASS_LIST, DATASET, STYLE, END, NEXT, PREV, START, MIME, CUSTOM_ELEMENTS
+  CLASS_LIST, DATASET, STYLE, END, NEXT, PREV, START, MIME
 } = require('../shared/symbols.js');
 
 const {
@@ -26,12 +26,13 @@ const {
 
 const {elementAsJSON} = require('../shared/jsdon.js');
 const {matches, prepareMatch} = require('../shared/matches.js');
-const {parseFromString} = require('../shared/parse-from-string.js');
 
 const {isConnected, parentElement, previousSibling, nextSibling} = require('../shared/node.js');
 const {previousElementSibling, nextElementSibling} = require('../mixin/non-document-type-child-node.js');
 
 const {before, after, replaceWith, remove} = require('../mixin/child-node.js');
+const InnerHTML = (m => /* c8 ignore start */ m.__esModule ? m.default : m /* c8 ignore stop */)(require('../mixin/inner-html.js'));
+const mixin = (m => /* c8 ignore start */ m.__esModule ? m.default : m /* c8 ignore stop */)(require('../mixin/mixin.js'));
 const {ParentNode} = require('../mixin/parent-node.js');
 
 const {DOMStringMap} = require('../dom/string-map.js');
@@ -152,18 +153,6 @@ class Element extends ParentNode {
     this.replaceChildren();
     if (text)
       this.appendChild(new Text(this.ownerDocument, text));
-  }
-
-  get innerHTML() {
-    return this.childNodes.join('');
-  }
-  set innerHTML(html) {
-    const {ownerDocument} = this;
-    const {constructor} = ownerDocument;
-    const document = new constructor;
-    document[CUSTOM_ELEMENTS] = ownerDocument[CUSTOM_ELEMENTS];
-    const {childNodes} = parseFromString(document, ignoreCase(this), html);
-    this.replaceChildren(...childNodes);
   }
 
   get outerHTML() { return this.toString(); }
@@ -469,3 +458,5 @@ class Element extends ParentNode {
   /* c8 ignore stop */
 }
 exports.Element = Element
+
+mixin(Element, InnerHTML);

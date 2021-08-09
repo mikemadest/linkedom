@@ -1,15 +1,8 @@
 'use strict';
 const {DOCUMENT_FRAGMENT_NODE} = require('../shared/constants.js');
+const InnerHTML = (m => /* c8 ignore start */ m.__esModule ? m.default : m /* c8 ignore stop */)(require('../mixin/inner-html.js'));
+const mixin = (m => /* c8 ignore start */ m.__esModule ? m.default : m /* c8 ignore stop */)(require('../mixin/mixin.js'));
 const {NonElementParentNode} = require('../mixin/non-element-parent-node.js');
-const {parseFromString} = require('../shared/parse-from-string.js');
-
-const {
-  ignoreCase
-} = require('../shared/utils.js');
-
-const {
-  CUSTOM_ELEMENTS
-} = require('../shared/symbols.js');
 
 /**
  * @implements globalThis.ShadowRoot
@@ -32,21 +25,7 @@ class ShadowRoot extends NonElementParentNode {
   get host() {
     return this._host;
   }
-  
-
-  get innerHTML() {
-    return this.childNodes.join('');
-  }
-
-  set innerHTML(html) {
-    const {ownerDocument} = this;
-    const {constructor} = ownerDocument;
-    const document = new constructor;
-    document[CUSTOM_ELEMENTS] = ownerDocument[CUSTOM_ELEMENTS];
-    const {childNodes} = parseFromString(document, ignoreCase(this), html);
-
-    this.replaceChildren(...childNodes);
-  }
-
 }
 exports.ShadowRoot = ShadowRoot
+
+mixin(ShadowRoot, InnerHTML);
